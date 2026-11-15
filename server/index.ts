@@ -1,10 +1,11 @@
 import cors from 'cors'
 import express from 'express'
-import { sharesFromFiling } from './filingShares'
-import { classEpsFromFiling } from './filingEps'
-import { sourceLinks } from './sourceLinks'
-import { netTangibleAssetsPerShare, preferredStockValue, priceToNetTangibleAssets, totalIntangibleAssets } from './tangibleAssets'
-import { yahooSymbol } from './yahooSymbol'
+import { fileURLToPath } from 'node:url'
+import { sharesFromFiling } from './filingShares.js'
+import { classEpsFromFiling } from './filingEps.js'
+import { sourceLinks } from './sourceLinks.js'
+import { netTangibleAssetsPerShare, preferredStockValue, priceToNetTangibleAssets, totalIntangibleAssets } from './tangibleAssets.js'
+import { yahooSymbol } from './yahooSymbol.js'
 
 // A single flaky upstream fetch (Yahoo/SEC rate-limiting, DNS blips, timeouts) must not take
 // down the whole API: without these handlers Node 18 terminates the process on any unhandled
@@ -20,6 +21,7 @@ process.on('uncaughtException', (error) => {
 
 const app = express()
 const port = Number(process.env.PORT ?? 8787)
+const clientDistPath = fileURLToPath(new URL('../dist/', import.meta.url))
 const yahooBase = 'https://query1.finance.yahoo.com'
 const secHeaders = {
   'User-Agent': process.env.SEC_USER_AGENT ?? 'EquityResearchDashboard research-app contact@example.com',
@@ -3079,6 +3081,12 @@ app.get('/api/fund-constituents/:symbol', async (req, res) => {
 })
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }))
+app.use(express.static(clientDistPath))
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api/')) return next()
+  res.sendFile('index.html', { root: clientDistPath })
+})
+
 const server = app.listen(port, () => {
   console.log(`Research API listening on http://localhost:${port}`)
 })

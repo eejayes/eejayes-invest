@@ -60,6 +60,21 @@ For responsible SEC API identification, set a contact address:
 SEC_USER_AGENT="EquityResearchDashboard your-email@example.com" npm run dev
 ```
 
+## Production serving
+
+Build the frontend and API, then start the Node server:
+
+```bash
+npm run build
+SEC_USER_AGENT="EquityResearchDashboard your-email@example.com" npm start
+```
+
+The server serves the built frontend and API from the same origin. It listens on
+port `8787` by default; set `PORT` to the port provided by your hosting platform.
+Deploy the build output and production dependencies (`dist/`, `dist-server/`, and
+`node_modules/`), and put the service behind HTTPS using the hosting platform or a
+reverse proxy. Do not expose the Vite development server to the public internet.
+
 ## Metrics
 
 - Price and change relative to the first visible price
