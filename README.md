@@ -1,6 +1,6 @@
-# US Equity Research Dashboard
+# Equity Research Dashboard
 
-A web-based US equity research dashboard for Nasdaq and NYSE stocks. It combines Yahoo Finance price history with quarterly SEC EDGAR company facts.
+A web-based equity research dashboard. It combines Yahoo Finance price history with quarterly SEC EDGAR company facts.
 
 Named portfolios, analysis collections, screener settings, and comparison-table columns are saved automatically in the browser's local storage. No account or database is required.
 
